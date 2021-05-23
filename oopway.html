@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" style="font-size: calc(0.645vh + 0.45em);">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body style="font-family: sans-serif">
+<h2>0-249</h2>
+<!--
+<h2>35-249</h2>
+<h1>Bundle Properties With Methods</h1>
+<h3>Инкапсуляция</h3>
+<h3>
+    1* Основная идея инкапсуляции - связать данные с методами.
+</h3>
+<h3>
+    2* Основная цель - ограничить возможности неправильного использования нашего класса.
+</h3>
+<p>// есть private свойство<sup>2*</sup>, в котором хранится возраст пользователя и некоторые методы, которые работают с этими данными<sup>1*</sup></p>
+<p>Считайте инкапсуляцию сокрытием деталей объекта от внешнего мира и
+    предоставление общедоступного интерфейса для взаимодействия с этим
+    объектом.
+</p>
+<h3>Определение нового типа</h3>
+<h3>Новый тип данных new User()</h3>
+<p>$user = new User('John', 'john@example.com', 18);</p>
+<h3>Итого</h3>
+<p>
+    Абстракция - это удаление ненужных деталей, чтобы описать что-то более простым языком, чтобы сосредотачиваться только на
+    важных аспектах  текущего контекста.
+</p>
+<p>
+    Инкапсуляция - это метод, используемый как часть абстракции. Инкапсуляция касается состояния объектов когда они скрывают это от внешнего мира. Пользователи класса могут взаимодействовать с ним с помощью его методов, но не могут напрямую получить доступ к своему состоянию. Абстракция - это более  общий термин, он часто не возможен без инкапсуляция.
+</p>
+<h3>Семейства родственных типов</h3>
+<h3>Наследование</h3>
+<h3>Разные типы с одинаковым поведением</h3>
+<h3>Интерфейс</h3>
+<p>interface InterfaceName</p>
+<p>{</p>
+<p>public function method($parameter);</p>
+<p>}</p>
+<p>один интерфейс может быть унаследован от другого с помощью ключевого слова extends</p>
+<p>interface ChildInterface extends ParentInterface</p>
+<p>Одно из отличий от классов заключается в множественном наследовании, которое доступно для интерфейсов:</p>
+<p>interface LoggerInterface extends WritableInterface, ReadableInterface</p>
+<p> Когда нам нужно гарантировать, что объект реализует некоторые методы, мы можем использовать интерфейс. Интерфейс - это гарантия между программистом и его кодом</p>
+<h3>Интерфейс и абстрактный класс</h3>
+<h3>Полиморфизм</h3>
+<h3>Предоставление единого интерфейса для разных типов</h3>
+<p>Полиморфизм здесь - это комбинация реализации интерфейса (абстрактного класса или интерфейса) в ваших классах</p>
+
+<h3>SOLID</h3>
+<h3>S - single responsibility</h3>
+<h5>ПРИНЦИП ЕДИНСТВЕННОЙ ОТВЕТСТВЕННОСТИ</h5>
+<p>Цель - создать небольшие полезные классы, которые должны нести единственную ответственность</p>
+
+
+<p>class Category</p>
+<p>{</p>
+<p>public function addProduct(Product $product): self</p>
+<p>{</p>
+<p>if (auth()->user() instanceof Admin) {</p>
+<p>throw new UnAuthorizedException;</p>
+<p>//add product to the category</p>
+<p>return $this;</p>
+<p>}</p>
+<p>}</p>
+<p>// Здесь 2 обязанности: добавление новых товаров в категорию и проверка подлинности пользователя </p>
+<p>// Которые следует переместить или извлечь из класса</p>
+
+<p>final class OrderPaymentService</p>
+<p>{</p>
+<p>private $order;</p>
+<p>private $paymentGateway;</p>
+<p>public function __construct(PaymentGateway $paymentGateway)</p>
+<p>{</p>
+<p>$this->order = $order;</p>
+<p>$this->paymentGateway = $paymentGateway;</p>
+<p>}</p>
+<p>public function pay(Order $order) {</p>
+<p>$this->paymentGateway->charge(</p>
+<p>$this->order->getId(),</p>
+<p>$this->order->getTotal(),</p>
+<p>$this->order->getCustomerId()</p>
+<p>);</p>
+<p>}</p>
+<p>}</p>
+<hr>
+<h3>O -open-close</h3>
+<h4>Принцип открытости закрытости </h4>
+<h5>Классы должны быть открыты для расширения, но закрыты для модификации.</h5>
+<h4>Смысл принципа - Конструкция системы должна быть проста и устойчива к изменениям</h4>
+<h2>1</h2>
+<p>interface Workable</p>
+<p>{</p>
+<p>public function work():void</p>
+<p>}</p>
+<hr>
+<p>final class Programmer implements Workable</p>
+<p>{</p>
+<p>public function work(): void</p>
+<p>{</p>
+<p>echo 'coding an app';</p>
+<p>}</p>
+<hr>
+<h2>2</h2>
+<p>final class ProjectManager</p>
+<p>{</p>
+<p>public function manage(Workable $worker): void</p>
+<p>{</p>
+<p>$worker->work()</p>
+<p>}</p>
+<hr>
+<h2>3</h2>
+<p>final class Tester implements Workable</p>
+<p>{</p>
+<p>public function work(): void</p>
+<p>{</p>
+<p>echo 'testing an app';</p>
+<p>}</p>
+<p>}</p>
+<hr>
+<h3>Liskov Substitution</h3>
+<h5>Дочерние классы должны быть заменяемыми на свои родительские классы</h5>
+<h3>Принцип разделения интерфейса</h3>
+<p>Когда вы обнаруживаете, что создаете интерфейсы, которые не полностью реализованы в их клиентах, вы
+    нарушаете принцип разделения интерфейсов. Основная цель этого принципа - сделать интерфейсы. Разделение интерфейсов
+    и принцип единой ответственности дополняют друг друга. Они служат той же цели: обеспечивают небольшие,
+    очень сплоченные блоки. Принцип разделения интерфейса обеспечивает что интерфейсы небольшие,
+    а принцип единой ответственности гарантирует, что классы будут небольшими.</p>
+<hr>
+<h3>Dependency Inversion Principle</h3>
+<h5>Модули высокого уровня не должны зависеть от модулей низкого уровня</h5>
+<p>100</p>-->
+
+</body>
+</html>
