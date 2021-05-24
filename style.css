@@ -2,6 +2,9 @@ body{
     background-color: #424141;
     color: #d4d3d3;
 }
+h2 a{
+    color: #000;
+}
 
 .Class{
     font-size: 1.2em;

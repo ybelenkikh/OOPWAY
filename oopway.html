@@ -10,7 +10,10 @@
 
 </head>
 <body style="font-family: sans-serif">
-<h2>35-249</h2>
+<h2>PHP OOP Way Sergey Zhuk</br>
+    This book is for sale at <a href="http://leanpub.com/phpoopway">http://leanpub.com/phpoopway</a></br>
+    This version was published on 2019-06-21</br>
+    © 2017 - 2019 Sergey Zhuk</h2>
 <p>Почему абстракция так важна и какую ценность она приносит для нашего приложения?</p>
 <p>Почему мы должны инкапсулировать свойства в классы вместо того, чтобы делать все свойства публичными?</p>
 <p>Почему иногда уместно использовать интерфейс, а иногда абстрактный класс.</p>
@@ -111,15 +114,17 @@
             <p class="p-l">}</p>
             <p>}</p>
         </div>
-        <div class="description Class">
-            <p>class User</p>
-            <p>{</p>
-            <p class="p-l">public function completeTask(Project $project)</p>
-            <p class="p-l">{</p>
-            <p class="p-l-1">$task->close();</p>
-            <p class="p-l">}</p>
-            <p>}</p>
-            <p>$user->completeTask(new Project());</p>
+        <div class="description">
+            <div class="Class">
+                <p>class User</p>
+                <p>{</p>
+                <p class="p-l">public function completeTask(Project $project)</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">$task->close();</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+                <p>$user->completeTask(new Project());</p>
+            </div>
         </div>
     </div>
 </div>
@@ -244,8 +249,8 @@
               <p>}</p>
               <p class="pb-1">// дублирование кода</p>
           </div>
-            <div class="Class">
-                <p>class Category</p>
+          <div class="Class">
+                <p>class Category implements Sluggable</p>
                 <p>{</p>
                 <p class="p-l">use HasSlug;</p>
                 <p class="p-l pb-1">private $name;</p>
@@ -253,8 +258,14 @@
                 <p class="p-l">{</p>
                 <p class="p-l-1">return $this->name;</p>
                 <p class="p-l">}</p>
+                <p class="p-l">public function parent(): self</p>
+                <p class="p-l">{</p>
+                <p class="p-l">}</p>
+                <p class="p-l">public function products(): array</p>
+                <p class="p-l">{</p>
+                <p class="p-l">}</p>
                 <p class="pb-1">}</p>
-                <p>class Product</p>
+                <p>class Product implements Sluggable</p>
                 <p>{</p>
                 <p class="p-l">use HasSlug;</p>
                 <p class="p-l">private $name;</p>
@@ -270,12 +281,20 @@
             <p>Трейты - это механизм повторного использования кода в языках с единичным наследованием, таких как PHP</p>
             <p>Трейты позволяют нам извлекать тесно связанную группу методов в единый многоразовый
                 item. А потом этот item можно вставлять в классы.</p>
+            <p>Трейты - очень мощный и гибкий инструмент в языках без множественного наследования.
+                Они могут улучшить кодовую базу и убрать дублирование из классов. Но с другой стороны,
+                они могут усложнить или даже сломать приложение при неосторожном использовании.</p>
             <div class="Trait">
                 <p>trait HasSlug</p>
                 <p>{</p>
                 <p>public function slug(): string</p>
                 <p>{</p>
                 <p>$string = $this->getStringForSlug();</p>
+                <p>
+                    if (!property_exists($this, 'name')) {
+                    throw new Exception(
+                    'No property "name" to create slug'
+                    );</p>
                 <p>$cleared = preg_replace(
                     '/[^A-Za-z0-9-]+/', '-', $string
                     );</p>
@@ -284,123 +303,66 @@
                 <p>abstract protected function getStringForSlug(): string;</p>
                 <p>}</p>
             </div>
+            <div class="interface">
+                <p>interface Sluggable</p>
+                <p>{</p>
+                <p>public function slug(): string;</p>
+                <p>}</p>
+                <p>Класс который хочет использовать трейт HasSlug должен реализовывать интерфейс Sluggable.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="polymorphism">
+    <h2>Полиморфизм</h2>
+    <h4></h4>
+    <div class="parent">
+        <div class="Class">
+                <p>final class Application</p>
+                <p>{</p>
+                <p class="p-l">private $cache;</p>
+                <p class="p-l">public function setCache(Cache $cache): void</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">$this->cache = $cache;</p>
+                <p class="p-l">}</p>
+                <p class="p-l">public function flushCache()</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">$this->cache->flush();</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+                <div class="abstractClass">
+                    <p>abstract class Cache</p>
+                    <p>{</p>
+                    <p class="p-l">abstract public function flush(): void;</p>
+                    <p>}</p>
+                </div>
+                <p>final class MemcacheCache extends Cache</p>
+                <p>{</p>
+                <p class="p-l">public function flush(): void</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">$this->memcache->flush();</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+            <p>final class RedisCache extends Cache</p>
+            <p>{</p>
+            <p class="p-l">public function flush(): void</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$this->redis->flush();</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+        </div>
+        <div class="description">
+            <p>Subtype Polymorphism</p>
+            <p>В терминах ООП это означает, что когда у нас есть методы в разных классах,
+                которые делают похожие вещи, мы должны дать этим методам одно и то же имя.</p>
+            <p> За одним именем мы спрятали разную логику, поэтому можем смело добавлять новые
+                реализации, и каждый класс, который знает это имя, автоматически знает, как сотрудничать
+                с новыми реализациями.</p>
         </div>
     </div>
 </div>
 
-class Category
-{
-use HasSlug;
-private $name;
-protected function getStringForSlug(): string
-{
-return $this->name;
-}
-public function parent(): self
-{
-// returns a parent category
-}
-Fundamentals 39
-/**
-* @return Product[]
-*/
-public function products(): array
-{
-// returns products
-}
-}
-What public interface does this class have? Before using a trait it consisted of two methods: parent()
-and products(). But the trait has implicitly modified the class interface and has added a new method
-slug(). And there is no guarantee for other classes that Category provides this method. We need
-to visit its source code, then jump to the trait source code and find it out. Looks like we need an
-interface here to make Category again trustable for the rest of the code base.
-interface Sluggable
-{
-public function slug(): string;
-}
-trait HasSlug
-{
-// ...
-}
-class Category implements Sluggable
-{
-use HasSlug;
-// ...
-}
-With Sluggable interface, we can safely type-hint it in places where we need to call method slug()
-and sleep safely. The class that consumes HasSlug trait and also guarantees that it has Sluggable
-functionality by implementing the appropriate interface. So, any class that wants to consume trait
-HasSlug should also implement Sluggable interface. It’s time to modify class Product.
-Fundamentals 40
-class Product implements Sluggable
-{
-use HasSlug;
-private $name;
-// ...
-}
-With this approach, our application stays robust. For small and crud applications it will be too
-overwhelming, but if you have a large complex code base, maybe a corresponding interface for a
-trait will be not superfluous.
-One more problem can arise with traits when a trait uses a property that is supposed to be in the
-consuming class. Remember our first implementation of HasSlug trait? I’ll remind it’s code to you:
-trait HasSlug
-{
-public function slug(): string
-{
-$cleared = preg_replace(
-'/[^A-Za-z0-9-]+/', '-', $this->name
-);
-return strtolower($cleared);
-}
-}
-A trait considers that there will be an available property name in the class. But when we use it in
-class Product that has property title instead of name, our application will be broken every time we
-call method slug() on this class. To fix this we can use property_exists function in a trait to check
-for available properties:
-trait HasSlug
-{
-public function slug(): string
-{
-if (!property_exists($this, 'name')) {
-throw new Exception(
-'No property "name" to create slug'
-);
-}
-Fundamentals 41
-$cleared
-= preg_replace
-(
-'/[^A-Za-z0-9-]+/'
-, '-'
-, $this->name
-);
-return strtolower
-($cleared);
-}
-}
-No more private properties
-Traits can get access to private properties and methods of your class. It can be useful in situations
-when you need somehow to get access to them, but it is not achievable with inheritance.
-trait Printable
-{
-function print(): void {
-echo $this->title;
-}
-}
-class Book
-{
-use Printable;
-private $title = "A very interesting book";
-}
-$book = new Book;
-$book->print(); // A very interesting book
-Use this feature carefully and only when you have a solid reason for it. Private properties are private
-and are not considered to be accessible out of the class.
-Fundamentals 43
-Summary
-Traits are very powerful and flexible tool in languages without multiple inheritance. They can
-improve your code base and remove duplication from your classes. But from the other side, they
-can add more complexity or even break your application when using them not carefully
+<h1>50</h1>
 
 <!--
 <h2>35-249</h2>
