@@ -10,7 +10,398 @@
 
 </head>
 <body style="font-family: sans-serif">
-<h2>0-249</h2>
+<h2>35-249</h2>
+<p>Почему абстракция так важна и какую ценность она приносит для нашего приложения?</p>
+<p>Почему мы должны инкапсулировать свойства в классы вместо того, чтобы делать все свойства публичными?</p>
+<p>Почему иногда уместно использовать интерфейс, а иногда абстрактный класс.</p>
+<p>Почему создание иерархии наследования для повторного использования кода - плохая идея.</p>
+<p>Почему лучше передать требуемый объект в качестве аргумента метода, а не создавать его внутри?</p>
+<hr>
+<h1>Fundamentals</h1>
+<div class="bundlePropertiesWithMethods">
+    <h2>Связывание свойств с методами</h2>
+    <h4>Инкапсуляция</h4>
+    <div class="parent">
+        <div class="Class">
+            <p>class User</p>
+            <p>{</p>
+            <p class="p-l">private $name;</p>
+            <p class="p-l">private $email;</p>
+            <p class="p-l pb-1">private $age;</p>
+            <p class="p-l">public function __construct(string $name, string $email, int $age)</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$this->name = $name;</br> $this->email = $email;</br> $this->setAge($age);</p>
+            <p class="p-l">}</p>
+            <p class="p-l">public function getAge():int</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return $this->age;</p>
+            <p class="p-l">}</p>
+            <p class="p-l">public function setAge(int $age):self</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return $this->age = abs($age);</p>
+            <p class="p-l">}</p>
+            <p class="p-l">public function isYoung():bool</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return $this->age < 18;</p>
+            <p class="p-l">}</p>
+
+            <p>}</p>
+        </div>
+        <div class="description">
+            <p>Основная идея инкапсуляции - связать данные с методами.</p>
+            <p>Основная цель - ограничить возможности неправильного использования нашего класса.</p>
+            <p>Считайте инкапсуляцию сокрытием деталей объекта от внешнего мира и
+                предоставление общедоступного интерфейса для взаимодействия с этим
+                объектом</p>
+            <p>Инкапсуляция - это метод, используемый как часть абстракции. Инкапсуляция касается состояния объектов
+                когда они скрывают это от внешнего мира. Пользователи класса могут взаимодействовать с ним с помощью его методов, но
+                не может напрямую получить доступ к своему состоянию.</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="defineANewType">
+    <h2>Определение нового типа данных</h2>
+    <h4>Абстракция</h4>
+    <div class="parent">
+        <div class="">
+            <p class="pb-1">Новый абстрактный класс определяет интерфейс для этого нового типа данных. Когда мы предоставляем общедоступные методы
+                мы говорим: «Эй, с переменной этого типа данных вы можете сделать это, и она будет вести себя в этом
+                определенный способ". Это очень важно, когда мы рассматриваем класс как тип данных. Его публичный интерфейс
+                - это набор правил, определяющих способ взаимодействия с этим типом.</p>
+            <div class="abstractClass">
+                <p>abstract class AbstractClass</p>
+                <p>{</p>
+                <p>// нельзя создать объекты абстрактного класса</p>
+                <p>// в дочернем классе необходимо определить все абстрактные методы обязательно</p>
+                <p class="">}</p>
+            </div>
+
+        </div>
+        <div class="description">
+            <p>Абстракция - «это что-то о повторном использовании кода»</p>
+            <p>Есть много разных способов добиться повторного использования кода, и наихудший из них - абстракция.</p>
+            <p>Абстракция - это удаление ненужных деталей, чтобы описать что-то более простым языком.
+                термины, чтобы сосредоточиться только на важных аспектах текущего контекста.</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="familiesOfRelatedTypes">
+    <h2>Семейства родственных типов</h2>
+    <h4>Наследование</h4>
+    <div class="parent">
+        <div class="Class">
+            <p>class Task</p>
+            <p>{</p>
+            <p class="p-l">private $isClosed;</p>
+            <p class="p-l pb-1">private $closedAt;</p>
+            <p class="p-l">public function close()</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$this->isClosed = true;</p>
+            <p class="p-l-1">$this->closedAt = date("Y-d-m H:i:s");</p>
+            <p class="p-l-1">return $this;</p>
+            <p class="p-l">}</p>
+            <p class="pb-1">}</p>
+            <p>class Project extends Task</p>
+            <p>{</p>
+            <p class="p-l">public function close</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">parent::close();</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+        </div>
+        <div class="description Class">
+            <p>class User</p>
+            <p>{</p>
+            <p class="p-l">public function completeTask(Project $project)</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$task->close();</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+            <p>$user->completeTask(new Project());</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="differentTypesWithTheSameBehavior">
+    <h2>Различные типы данных с одинаковым поведением</h2>
+    <h4>Интерфейс</h4>
+    <div class="parent">
+        <div class="Class">
+            <div class="interface">
+                <p>interface Flyable</p>
+                <p>{</p>
+                <p class="p-l">public function fly(int $distance);</p>
+                <p class="pb-1">}</p>
+            </div>
+            <p>final class Bird implements Flyable</p>
+            <p>{</p>
+            <p class="p-l">public function fly(int $distance)</p>
+            <p class="p-l">{</p>
+            <p class="p-l">}</p>
+            <p class="pb-1">}</p>
+            <div class="abstractClass">
+                <p>abstract class FlyableEntity</p>
+                <p>{</p>
+                <p class="p-l pb-1">protected $wings;</p>
+                <p class="p-l">abstract public function fly(int $distance);</p>
+                <p>}</p>
+            </div>
+        </div>
+        <div class="description">
+            <p>Интерфейс - это гарантия между программистом и его кодом</p>
+            <p>Различие интерфейсов с классами заключается во множественном наследовании, которое доступно для интерфейсов</p>
+            <div class="interface">
+                <p>interface LoggerInterface extends WritableInterface, ReadableInterface</p>
+                <p>{</p>
+                <p>}</p>
+            </div>
+            <hr>
+            <p>Абстрактный класс также предоставляет интерфейс. Отличие, что абстрактный класс может предоставить
+                логику реализации для своих методов</p>
+            <p>final class Bird extends FlyableEntity</p>
+            <p>{</p>
+            <p class="p-l">public function fly(int $distance)</p>
+            <p class="p-l">{</p>
+            <p></p>
+            <p class="p-l">}</p>
+            <p>}</p>
+            <p>Эта иерархия предназначена только для того, чтобы продемонстрировать разницу между интерфейс и абстрактный класс.</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="InterfaceVsAbstractClass">
+    <h2>Интерфейс. Абстрактный класс.</h2>
+    <h4></h4>
+    <div class="parent">
+        <div class="Class">
+            <div class="abstractClass">
+                <p>abstract class Cache</p>
+                <p>{</p>
+                <p class="p-l">abstract public function get(Cacheable $entity);</p>
+                <p class="p-l">abstract public function set(Cacheable $entity);</p>
+                <p class="pb-1">}</p>
+            </div>
+            <div class="interface">
+                <p>interface Cacheable</p>
+                <p>{</p>
+                <p class="p-l">public function getCacheKey();</p>
+                <p class="p-l">public function getCacheData();</p>
+                <p class="pb-1">}</p>
+            </div>
+            <p>class Category implements Cacheable</p>
+            <p>{</p>
+            <p class="p-l">public function getCacheKey(): string</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return 'product_' . $this->id;</p>
+            <p class="p-l">}</p>
+            <p class="p-l">public function getCacheData(): array</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return [];</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+        </div>
+        <div class="description">
+           <p>При использовании абстрактных классов наши константы могут иметь значения переменных</p>
+            <div class="interface">
+                <p>interface MathInterface</p>
+                <p>{</p>
+                <p>const PI = 3.14159;</p>
+                <p>}</p>
+            </div>
+            <p>С помощью абстрактного класса мы определяем новый тип данных, который имеет собственный
+                интерфейс.</p>
+            <p>Интерфейс предоставляет только публичное объявление методов. Гарантия на код клиента
+                который взаимодействует с объектами, реализующими этот интерфейс.</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="traits">
+    <h2>Трейты</h2>
+    <h4></h4>
+    <div class="parent">
+        <div class="Class">
+          <div class="error">
+              <p>class Product</p>
+              <p>{</p>
+              <p class="p-l">private $name;</p>
+              <p class="p-l">public function slug(): string</p>
+              <p class="p-l">{</p>
+              <p class="p-l-1">$cleared = preg_replace( '/[^A-Za-z0-9-]+/', '-', $this->name );</p>
+              <p class="p-l-1">return strtolower($cleared);</p>
+              <p class="p-l pb-1">}</p>
+              <p>class Category</p>
+              <p>{</p>
+              <p class="p-l">private $name;</p>
+              <p class="p-l">public function slug(): string</p>
+              <p class="p-l">{</p>
+              <p class="p-l-1">$cleared = preg_replace( '/[^A-Za-z0-9-]+/', '-', $this->name );</p>
+              <p class="p-l-1">return strtolower($cleared);</p>
+              <p class="p-l">}</p>
+              <p>}</p>
+              <p class="pb-1">// дублирование кода</p>
+          </div>
+            <div class="Class">
+                <p>class Category</p>
+                <p>{</p>
+                <p class="p-l">use HasSlug;</p>
+                <p class="p-l pb-1">private $name;</p>
+                <p class="p-l ">protected function getStringForSlug(): string</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">return $this->name;</p>
+                <p class="p-l">}</p>
+                <p class="pb-1">}</p>
+                <p>class Product</p>
+                <p>{</p>
+                <p class="p-l">use HasSlug;</p>
+                <p class="p-l">private $name;</p>
+                <p class="p-l">private $shortName;</p>
+                <p class="p-l">protected function getStringForSlug(): string</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">return $this->shortName;</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+            </div>
+        </div>
+        <div class="description">
+            <p>Трейты - это механизм повторного использования кода в языках с единичным наследованием, таких как PHP</p>
+            <p>Трейты позволяют нам извлекать тесно связанную группу методов в единый многоразовый
+                item. А потом этот item можно вставлять в классы.</p>
+            <div class="Trait">
+                <p>trait HasSlug</p>
+                <p>{</p>
+                <p>public function slug(): string</p>
+                <p>{</p>
+                <p>$string = $this->getStringForSlug();</p>
+                <p>$cleared = preg_replace(
+                    '/[^A-Za-z0-9-]+/', '-', $string
+                    );</p>
+                <p>return strtolower($cleared);</p>
+                <p>}</p>
+                <p>abstract protected function getStringForSlug(): string;</p>
+                <p>}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+class Category
+{
+use HasSlug;
+private $name;
+protected function getStringForSlug(): string
+{
+return $this->name;
+}
+public function parent(): self
+{
+// returns a parent category
+}
+Fundamentals 39
+/**
+* @return Product[]
+*/
+public function products(): array
+{
+// returns products
+}
+}
+What public interface does this class have? Before using a trait it consisted of two methods: parent()
+and products(). But the trait has implicitly modified the class interface and has added a new method
+slug(). And there is no guarantee for other classes that Category provides this method. We need
+to visit its source code, then jump to the trait source code and find it out. Looks like we need an
+interface here to make Category again trustable for the rest of the code base.
+interface Sluggable
+{
+public function slug(): string;
+}
+trait HasSlug
+{
+// ...
+}
+class Category implements Sluggable
+{
+use HasSlug;
+// ...
+}
+With Sluggable interface, we can safely type-hint it in places where we need to call method slug()
+and sleep safely. The class that consumes HasSlug trait and also guarantees that it has Sluggable
+functionality by implementing the appropriate interface. So, any class that wants to consume trait
+HasSlug should also implement Sluggable interface. It’s time to modify class Product.
+Fundamentals 40
+class Product implements Sluggable
+{
+use HasSlug;
+private $name;
+// ...
+}
+With this approach, our application stays robust. For small and crud applications it will be too
+overwhelming, but if you have a large complex code base, maybe a corresponding interface for a
+trait will be not superfluous.
+One more problem can arise with traits when a trait uses a property that is supposed to be in the
+consuming class. Remember our first implementation of HasSlug trait? I’ll remind it’s code to you:
+trait HasSlug
+{
+public function slug(): string
+{
+$cleared = preg_replace(
+'/[^A-Za-z0-9-]+/', '-', $this->name
+);
+return strtolower($cleared);
+}
+}
+A trait considers that there will be an available property name in the class. But when we use it in
+class Product that has property title instead of name, our application will be broken every time we
+call method slug() on this class. To fix this we can use property_exists function in a trait to check
+for available properties:
+trait HasSlug
+{
+public function slug(): string
+{
+if (!property_exists($this, 'name')) {
+throw new Exception(
+'No property "name" to create slug'
+);
+}
+Fundamentals 41
+$cleared
+= preg_replace
+(
+'/[^A-Za-z0-9-]+/'
+, '-'
+, $this->name
+);
+return strtolower
+($cleared);
+}
+}
+No more private properties
+Traits can get access to private properties and methods of your class. It can be useful in situations
+when you need somehow to get access to them, but it is not achievable with inheritance.
+trait Printable
+{
+function print(): void {
+echo $this->title;
+}
+}
+class Book
+{
+use Printable;
+private $title = "A very interesting book";
+}
+$book = new Book;
+$book->print(); // A very interesting book
+Use this feature carefully and only when you have a solid reason for it. Private properties are private
+and are not considered to be accessible out of the class.
+Fundamentals 43
+Summary
+Traits are very powerful and flexible tool in languages without multiple inheritance. They can
+improve your code base and remove duplication from your classes. But from the other side, they
+can add more complexity or even break your application when using them not carefully
+
 <!--
 <h2>35-249</h2>
 <h1>Bundle Properties With Methods</h1>

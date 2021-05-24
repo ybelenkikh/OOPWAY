@@ -1,0 +1,46 @@
+body{
+    background-color: #424141;
+    color: #d4d3d3;
+}
+
+.Class{
+    font-size: 1.2em;
+    min-width: 50%;
+    background-color: #1f409c;
+    border-radius: 30px;
+    padding: 1em;
+}
+.Class p{
+    padding: 0;
+    margin: 0;
+}
+.Class .p-l{
+    padding-left: 2em;
+}
+.Class .pb-1{
+    margin-bottom: 1em;
+}
+.Class .p-l-1{
+    padding-left: 4em;
+}
+.parent{
+    display: flex;
+}
+.error{
+    background-color: #ba4040;
+}
+.Trait{
+    background-color: #952588;
+    border-radius: 30px;
+    padding: 1em;
+}
+.abstractClass{
+    background-color: #828282;
+    border-radius: 20px;
+    padding: 1em;
+}
+.interface{
+    background-color: #685936;
+    border-radius: 20px;
+    padding: 1em;
+}
