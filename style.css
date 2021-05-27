@@ -47,3 +47,25 @@ h2 a{
     border-radius: 20px;
     padding: 1em;
 }
+.description a{
+    color: burlywood;
+}
+.description b{
+    color: burlywood;
+}
+.centered{
+    text-align: center;
+}
+.solid{
+    display: flex;
+    justify-content: center;
+}
+.solid__item{
+    text-align: center;
+}
+.solid__item h1{
+    border-bottom: 1px solid slategrey;
+}
+.solid__item:not(:last-child){
+    border-right: 1px solid slategrey;
+}

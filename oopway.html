@@ -14,11 +14,6 @@
     This book is for sale at <a href="http://leanpub.com/phpoopway">http://leanpub.com/phpoopway</a></br>
     This version was published on 2019-06-21</br>
     © 2017 - 2019 Sergey Zhuk</h2>
-<p>Почему абстракция так важна и какую ценность она приносит для нашего приложения?</p>
-<p>Почему мы должны инкапсулировать свойства в классы вместо того, чтобы делать все свойства публичными?</p>
-<p>Почему иногда уместно использовать интерфейс, а иногда абстрактный класс.</p>
-<p>Почему создание иерархии наследования для повторного использования кода - плохая идея.</p>
-<p>Почему лучше передать требуемый объект в качестве аргумента метода, а не создавать его внутри?</p>
 <hr>
 <h1>Fundamentals</h1>
 <div class="bundlePropertiesWithMethods">
@@ -313,11 +308,13 @@
         </div>
     </div>
 </div>
+<hr>
 <div class="polymorphism">
     <h2>Полиморфизм</h2>
     <h4></h4>
     <div class="parent">
         <div class="Class">
+            final class
                 <p>final class Application</p>
                 <p>{</p>
                 <p class="p-l">private $cache;</p>
@@ -358,55 +355,272 @@
             <p> За одним именем мы спрятали разную логику, поэтому можем смело добавлять новые
                 реализации, и каждый класс, который знает это имя, автоматически знает, как сотрудничать
                 с новыми реализациями.</p>
+            <p>           разные классы выполняют одинаковые действия, но не предоставляют общие
+                интерфейс
+            </p>
         </div>
     </div>
 </div>
+<hr>
+<div class="dependencyInjection">
+    <h2>Инъекция зависимостей</h2>
+    <h4></h4>
+    <div class="parent">
+        <div class="Class">
+          <div class="error">
+              <p>final class QueryBuilder</p>
+              <p>{</p>
+              <p class="p-l">public function execute(string $sql, array $params):void</p>
+              <p class="p-l">{</p>
+              <p class="p-l-1">$logger = new Logger();</p>
+              <p class="p-l-1">$logger->info('DB:' . $sql . ';' . implode(',', $params));</p>
+              <p class="p-l">}</p>
+              <p>}</p>
+          </div>
+        </div>
+        <div class="description">
+            <p>В объектно-ориентированном приложении объекты постоянно взаимодействуют друг с другом,
+                либо вызывая методы и получая информацию от другого объекта, либо изменяя состояние
+                объекты. В любом случае объекты часто зависят друг от друга.</p>
+            <p class="error">Если изменится конструктор класса Logger, добавится параметр $filename.
+                Все запросы к базе данных перестанут работать. Одно небольшое изменение приводит
+                к сбою всего приложения. Конечно, изменение конструктора класса в производственном
+                коде уже является сильным признаком плохого дизайна приложения.</p>
+        </div>
+    </div>
+</div>
+<div class="hardcodedDependencies">
+    <h2>Hard-coded dependencies</h2>
+    <h4>Dependency Inversion Principle</h4>
+    <div class="parent">
+        <div class="Class">
+            <p>final class QueryBuilder</p>
+            <p>{</p>
+            <p class="p-l">public function execute(string $sql, array $params, <b>Logger $logger = null</b>):void</p>
+            <p class="p-l">{</p>
+            <p class="p-l">if($logger)</p>
+            <p class="p-l-1">$logger->info(</p>
+            <p class="p-l-1">'DB:' . $sql . ';' . implode(',', $params)</p>
+            <p class="p-l-1">);</p>
+            <p class="p-l">}</p>
+            <p class="pb-1">}</p>
+            <hr>
+            <p>final class Delivery</p>
+            <p>{</p>
+            <p class="pb-1 p-l">private $client;</p>
+           <div class="error">
+               <p class="p-l">public function __construct()</p>
+               <p class="p-l">{</p>
+               <p class="p-l-1">$this->client = new HttpClient();</p>
+               <p class="p-l">}</p>
+           </div>
+            <p class="p-l">public function send(Order $order): array</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$response = $this->client
+                ->post('/orders/create', $order->toJson());</p>
+            <p class="p-l-1">return json_decode($response, true);</p>
+            <p class="p-l">}</p>
+            <p class="p-l">public function getStatus(int $orderId): array</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$response = $this->client
+                ->get('/orders/info', $orderId);</p>
+            <p class="p-l-1">return json_decode($response, true);</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+        </div>
+        <div class="description">
+            <p>передать его в качестве аргумента</p>
+            <p> + </br>
+                • Мы не зависим от сигнатуры конструктора класса Logger.</br>
+                • Мы не зависим от конкретной реализации. Мы можем расширить Logger с помощью InMemoryLogger
+                и безопасно им пользоваться.</br>
+                • Мы можем имитировать регистратор в целях тестирования.</p>
+            <p><b>
+                Когда мы передаем зависимость в качестве аргумента методу или конструктору, мы вводим ее. Эта техника
+                называется внедрением зависимостей. Вместо того, чтобы жестко кодировать наши зависимости, мы внедряем их в объект,
+                который их использует.</b></p>
+            <p class="">Вот эмпирическое правило: если объект
+                нельзя использовать без зависимости, эту зависимость следует передать
+                как аргумент конструктора</p>
+            <div class="Class">
+                <p>public function __construct(HttpClient $client)</p>
+                <p>{</p>
+                <p class="p-l">$this->client = $client;</p>
+                <p>}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ConstructorOrSetterInjection">
+    <h2>Constructor Or Setter Injection</h2>
+    <h4>Но почему мы должны использовать конструктор для внедрения зависимостей?</h4>
+    <h5>Может, лучше используйте метод withClient() и настройте объект после создания</h5>
+    <h6>Антипаттерн</h6>
+    <div class="parent">
+        <div class="Class">
+           <div class="error pb-1">
+               <p>public function withClient(HttpClient $client): void</p>
+               <p>{</p>
+               <p class="p-l">$this->client = $client;</p>
+               <p>}</p>
+           </div>
+           <div class="error">
+               <p>final class DeliveryController</p>
+               <p>{</p>
+               <p>private $delivery;</p>
+               <p>public function __constructor(Delivery $delivery)</p>
+               <p>{</p>
+               <p>$this->delivery = $delivery;</p>
+               <p>}</p>
+               <p>public function sendOrder(int $orderId): void</p>
+               <p>{</p>
+               <p>$order = Order::find($orderId);</p>
+               <p>$delivery->sendOrder($order);</p>
+               <p>}</p>
+               <p>}</p>
+               <p>$delivery = new Delivery();</p>
+               <p>$controller = new DeliveryController($delivery);</p>
+               <p>$controller->sendOrder(111);</p>
+           </div>
+        </div>
+        <div class="description">
+            <p>Эмпирическое правило для setter injection: используйте dependency injection setter,
+                которые не требуются для объекта. Эти зависимости не должны заменять
+                функциональность внутреннего объекта, а должны расширять его.</p>
+        </div>
+    </div>
+</div>
+<div class="dependencyInjectionContainer">
+    <h2>Dependency Injection Container</h2>
+    <h4>Где нам создавать все эти зависимости?</h4>
+    <div class="parent">
+        <div class="Class">
+            <p>final class Container</p>
+            <p>{</p>
+            <p class="p-l">public function makeDelivery(): Delivery</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$httpClient = new HttpClient(
+                'http://some-api.com'
+                );</p>
+            <p class="p-l-1">return new Delivery(</p>
+            <p class="p-l-1">$httpClient, $logger</p>
+            <p class="p-l-1">);</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+        </div>
+        <div class="description">
+            <p><a href="http://symfony.com/doc/current/components/dependency_injection.html">Symfony Component Dependency Injection</a></p>
+        </div>
+    </div>
+</div>
+<div class="dependencyInjectionSmells">
+    <h2>Как не использовать!</h2>
+    <h4></h4>
+    <div class="parent">
+        <div class="Class">
+           <div class="error">
+               <p>public function __construct(</p>
+               <p class="p-l">OrdersRepository $ordersRepo,</p>
+               <p class="p-l">PaymentGateway $payments,</p>
+               <p class="p-l">ShippingService $shipping,</p>
+               <p class="p-l">Logger $logger,</p>
+               <p class="p-l">Email $mailer</p>
+           </div>
+        </div>
+        <div class="description">
+            <p>Слишком много зависимостей
+                Когда у класса много зависимостей в конструкторе это первый признак того, что
+                этот класс имеет слишком много обязанностей (нарушает Single Responsibility Principle<sup><b>S</b>OLID</sup>)</p>
+            <p>Другой вариант - передать конструктору только контейнер, а затем разрешить все эти
+                зависимости - <b>anti-pattern Service Locator</b></p>
+        </div>
+    </div>
+</div>
+<div class="closure">
+    <h2>Замыкание</h2>
+    <h5>
+        Замыкание - это анонимная функция, которую можно сохранить в переменной
+        и передать в качестве аргумента в другие функции или методы.
+        Замыкания дают нам новую функциональность и возможность рефакторинга старого кода.</h5>
+    <div class="parent">
+        <div class="Class">
+            <p>$heyFunc = function($name){</p>
+            <p class="p-l">return "Hey, {$name}";</p>
+            <p>}</p>
+            <div class="error pb-1">
+                <p>$var = 'hello';</p>
+                <p>$func = function () {</p>
+                <p class="p-l">echo $var;</p>
+                <p>};</p>
+            </div>
+            <p>$var = 'hello';</p>
+            <p>$func = function () use ($var) {</p>
+            <p>echo $var;</p>
+            <p>};</p>
+            <p class="pb-1">$func(); // hello</p>
 
-<h1>50</h1>
+        </div>
+        <div class="description">
+            <p>Замыкание имеет отдельное пространство имен</p>
+            <p>Изменение этих переменных
+                внутри замыкания не имеет внешнего эффекта,
+                если эти переменные не являются объектами (объекты всегда передаются по ссылке)</p>
+            <div class="Class">
+                <p>$var = 'hello';</p>
+                <p>$func = function () use ($var) {</p>
+                <p>echo $var = 'hi';</p>
+                <p>};</p>
+                <p class="pb-1">$func(); // hello</p>
+            </div>
+            <p>
+                Если мы хотим изменить переменную $var, мы должны добавить амперсанд для передачи этой переменной по ссылке,
+                как это:</p>
+            <div class="Class">
+                <p>$var = 'hello';</p>
+                <p>$func = function () use (<b>&</b>$var) {</p>
+                <p>echo $var = 'hi';</p>
+                <p>};</p>
+                <p class="pb-1">$func(); // hello</p>
+            </div>
+            <p>Когда мы создаем анонимную функцию и назначаем ее переменной, PHP превращает ее в объект
+                класс Closure. Класс Closure - это особый класс. Мы не можем создать его экземпляры</p>
+        </div>
+    </div>
 
+</div>
+<hr>
+<h1 class="centered">object-oriented design</h1>
+<h1>SOLID Principles</h1>
+<div class="solid">
+    <div class="s solid__item">
+        <h1>S</h1>
+        <p>single responsibility</p>
+        <p>принцип единичной ответственности</p>
+    </div>
+    <div class="o solid__item">
+        <h1>O</h1>
+        <p>open-close</p>
+        <p>принцип открытости закрытости</p>
+    </div>
+    <div class="l solid__item">
+        <h1>L</h1>
+        <p>Liskov Substitution</p>
+        <p>Дочерние классы должны быть заменены на их родительские классы</p>
+    </div>
+    <div class="i solid__item">
+        <h1>I</h1>
+        <p>Interface Segregation</p>
+        <p>принцип разделение интерфейса</p>
+    </div>
+    <div class="d solid__item">
+        <h1>D</h1>
+        <p>Dependency Inversion</p>
+        <p>полагаться на абстракции</p>
+    </div>
+</div>
+
+<h1>76</h1>
 <!--
-<h2>35-249</h2>
-<h1>Bundle Properties With Methods</h1>
-<h3>Инкапсуляция</h3>
-<h3>
-    1* Основная идея инкапсуляции - связать данные с методами.
-</h3>
-<h3>
-    2* Основная цель - ограничить возможности неправильного использования нашего класса.
-</h3>
-<p>// есть private свойство<sup>2*</sup>, в котором хранится возраст пользователя и некоторые методы, которые работают с этими данными<sup>1*</sup></p>
-<p>Считайте инкапсуляцию сокрытием деталей объекта от внешнего мира и
-    предоставление общедоступного интерфейса для взаимодействия с этим
-    объектом.
-</p>
-<h3>Определение нового типа</h3>
-<h3>Новый тип данных new User()</h3>
-<p>$user = new User('John', 'john@example.com', 18);</p>
-<h3>Итого</h3>
-<p>
-    Абстракция - это удаление ненужных деталей, чтобы описать что-то более простым языком, чтобы сосредотачиваться только на
-    важных аспектах  текущего контекста.
-</p>
-<p>
-    Инкапсуляция - это метод, используемый как часть абстракции. Инкапсуляция касается состояния объектов когда они скрывают это от внешнего мира. Пользователи класса могут взаимодействовать с ним с помощью его методов, но не могут напрямую получить доступ к своему состоянию. Абстракция - это более  общий термин, он часто не возможен без инкапсуляция.
-</p>
-<h3>Семейства родственных типов</h3>
-<h3>Наследование</h3>
-<h3>Разные типы с одинаковым поведением</h3>
-<h3>Интерфейс</h3>
-<p>interface InterfaceName</p>
-<p>{</p>
-<p>public function method($parameter);</p>
-<p>}</p>
-<p>один интерфейс может быть унаследован от другого с помощью ключевого слова extends</p>
-<p>interface ChildInterface extends ParentInterface</p>
-<p>Одно из отличий от классов заключается в множественном наследовании, которое доступно для интерфейсов:</p>
-<p>interface LoggerInterface extends WritableInterface, ReadableInterface</p>
-<p> Когда нам нужно гарантировать, что объект реализует некоторые методы, мы можем использовать интерфейс. Интерфейс - это гарантия между программистом и его кодом</p>
-<h3>Интерфейс и абстрактный класс</h3>
-<h3>Полиморфизм</h3>
-<h3>Предоставление единого интерфейса для разных типов</h3>
-<p>Полиморфизм здесь - это комбинация реализации интерфейса (абстрактного класса или интерфейса) в ваших классах</p>
 
 <h3>SOLID</h3>
 <h3>S - single responsibility</h3>
