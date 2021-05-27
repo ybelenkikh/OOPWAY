@@ -596,6 +596,31 @@
         <h1>S</h1>
         <p>single responsibility</p>
         <p>принцип единичной ответственности</p>
+        <p>цель - создать небольшие полезные классы, которые должны нести единственную ответственность</p>
+        <div class="Class t-a-l">
+            <div class="error">
+                <p>class Category</p>
+                <p>{</p>
+                <p class="p-l">public function addProduct(Product $product): self</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">if (auth()->user() instanceof Admin) {</p>
+                <p class="p-l-1">throw new UnAuthorizedException;</p>
+                <p class="p-l-1">return $this;</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+                <p class="pb-1">Сколько обязанностей имеет class Category даже с этим маленьким образцом кода? Как минимум два:
+                    addProduct и
+                    проверка подлинности user.</p>
+            </div>
+            <p>class Category</p>
+            <p>{</p>
+            <p class="p-l">public function addProduct(Product $product): self</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">return $this;</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+
+    </div>
     </div>
     <div class="o solid__item">
         <h1>O</h1>
@@ -616,49 +641,14 @@
         <h1>D</h1>
         <p>Dependency Inversion</p>
         <p>полагаться на абстракции</p>
+
     </div>
 </div>
 
-<h1>76</h1>
+<h1>84</h1>
+
 <!--
 
-<h3>SOLID</h3>
-<h3>S - single responsibility</h3>
-<h5>ПРИНЦИП ЕДИНСТВЕННОЙ ОТВЕТСТВЕННОСТИ</h5>
-<p>Цель - создать небольшие полезные классы, которые должны нести единственную ответственность</p>
-
-
-<p>class Category</p>
-<p>{</p>
-<p>public function addProduct(Product $product): self</p>
-<p>{</p>
-<p>if (auth()->user() instanceof Admin) {</p>
-<p>throw new UnAuthorizedException;</p>
-<p>//add product to the category</p>
-<p>return $this;</p>
-<p>}</p>
-<p>}</p>
-<p>// Здесь 2 обязанности: добавление новых товаров в категорию и проверка подлинности пользователя </p>
-<p>// Которые следует переместить или извлечь из класса</p>
-
-<p>final class OrderPaymentService</p>
-<p>{</p>
-<p>private $order;</p>
-<p>private $paymentGateway;</p>
-<p>public function __construct(PaymentGateway $paymentGateway)</p>
-<p>{</p>
-<p>$this->order = $order;</p>
-<p>$this->paymentGateway = $paymentGateway;</p>
-<p>}</p>
-<p>public function pay(Order $order) {</p>
-<p>$this->paymentGateway->charge(</p>
-<p>$this->order->getId(),</p>
-<p>$this->order->getTotal(),</p>
-<p>$this->order->getCustomerId()</p>
-<p>);</p>
-<p>}</p>
-<p>}</p>
-<hr>
 <h3>O -open-close</h3>
 <h4>Принцип открытости закрытости </h4>
 <h5>Классы должны быть открыты для расширения, но закрыты для модификации.</h5>

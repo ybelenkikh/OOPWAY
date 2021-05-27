@@ -69,3 +69,6 @@ h2 a{
 .solid__item:not(:last-child){
     border-right: 1px solid slategrey;
 }
+.t-a-l{
+    text-align: left;
+}
