@@ -626,11 +626,176 @@
         <h1>O</h1>
         <p>open-close</p>
         <p>принцип открытости закрытости</p>
+        <p>Программные объекты (классы, модули, функции и т. Д.) Должны быть открыты для расширения, но закрыты
+            для модификации.</p>
+        <div class="Class t-a-l">
+            <div class="interface">
+                <p>interface Workable</p>
+                <p>{</p>
+                <p class="p-l">public function work():void</p>
+                <p>}</p>
+            </div>
+            <p>final class Programmer implements Workable</p>
+            <p>{</p>
+            <p class="p-l">public function work(): void</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">echo 'coding an app';</p>
+            <p class="pb-1 p-l">}</p>
+            <p>final class Tester implements Workable</p>
+            <p>{</p>
+            <p class="p-l">public function work(): void</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">echo 'testing an app';</p>
+            <p class="p-l">}</p>
+            <p class="pb-1">}</p>
+            <p>final class ProjectManager</p>
+            <p>{</p>
+            <p class="p-l">public function manage(Workable $worker): void</p>
+            <p class="p-l">{</p>
+            <p class="p-l-1">$worker->work()</p>
+            <p class="p-l">}</p>
+            <p>}</p>
+            <p>Смысл принципа Open-Closed довольно прост: конструкция вашей системы должна быть
+                проста и устойчива к изменениям. Это означает, что при изменении требований мы должны
+                быть готовы.
+                Это не означает, что мы должны создавать ненужные уровни абстракции, когда у нас есть только одна
+                реализация интерфейса. Нам просто нужно ограничить каскад изменений и свести их к
+                минимум. Мы можем добиться этого, извлекая расширяемое поведение за интерфейсом и скрывая
+                детали реализации из клиентского кода.</p>
+        </div>
     </div>
     <div class="l solid__item">
         <h1>L</h1>
         <p>Liskov Substitution</p>
+        <p>Three Rules to Respect Liskov Substitution Principle</p>
         <p>Дочерние классы должны быть заменены на их родительские классы</p>
+        <p>Когда класс использует реализацию интерфейса, он должен иметь возможность использовать любую реализацию этого
+            интерфейс без каких-либо доработок</p>
+        <h5>1.</h5>
+        <div class="Class">
+            <div class="t-a-l interface">
+                <p>interface Cacheable</p>
+                <p>{</p>
+                <p class="p-l">public function get($key)</p>
+                <p class="p-l">public function set($key, $value);</p>
+                <p>}</p>
+            </div>
+            <div class="t-a-l">
+                <p>final class CatalogController</p>
+                <p>{</p>
+                <p class="p-l">public function gifts(Cacheable $cache): View</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">$categories = $cache->get('giftsCategories');</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+            </div>
+            <p>Здесь мы не привязаны к конкретному механизму кеширования, и мы можем изменить его, не касаясь
+                логика контроллеров. Мы можем реализовать DatabaseCache, RedisCache или даже FileCache, и все будет
+                продолжать работать.</p>
+            <div class="t-a-l">
+                <p>final class CatalogController</p>
+                <p>{</p>
+                <p class="p-l">public function gifts ($cache): View</p>
+                <p class="p-l">{</p>
+                <p class="p-l-1">if ($cache instanceof DatabaseCache) {</p>
+                <p class="p-l-1">//..</p>
+                <p class="p-l-1">} elseif ($cache instanceof RedisCache) {</p>
+                <p class="p-l-1">//..</p>
+                <p class="p-l-1">} elseif ($cache instanceof FileCache) {</p>
+                <p class="p-l-1">//..</p>
+                <p class="p-l-1">}</p>
+                <p class="p-l">}</p>
+                <p>}</p>
+            </div>
+        </div>
+        <h5>2.</h5>
+        <p>Дочерние классы никогда не должны нарушать
+            определения типов родительского класса!</p>
+       <div class="Class">
+           <div class="abstractClass t-a-l">
+               <p>abstract class Vehicle</p>
+               <p>{</p>
+               <p>public function drive(){}</p>
+               <p>public function fuel(){}</p>
+               <p>}</p>
+           </div>
+           <div class="t-a-l">
+               <p>final class Car extends Vehicle</p>
+               <p>{</p>
+               <p>}</p>
+               <p>final class Bike extends Vehicle</p>
+               <p>{</p>
+               <p>}</p>
+           </div>
+           <p>Следует позаботиться о том, чтобы дочерние методы были совместимы со спецификацией родителя. Есть
+               три правила для достижения этого.</p>
+           <p>1. Первое правило касается параметров - замещающих методов</p>
+           <div class="abstractClass t-a-l">
+               <p>abstract class Mechanic</p>
+               <p>{</p>
+               <p class="p-l">public function fixVehicle(Bike $bike)</p>
+               <p class="p-l">{</p>
+               <p class="p-l-1">return $bike;</p>
+               <p class="p-l">}</p>
+               <p>}</p>
+           </div>
+           <div class="Class t-a-l">
+               <p>final class Bike extends Vehicle</p>
+               <p>{</p>
+               <p>}</p>
+           </div>
+           <div class="abstractClass t-a-l">
+               <p>abstract class Vehicle</p>
+               <p>{</p>
+               <p>}</p>
+           </div>
+           <div class="Class t-a-l">
+               <p>final class SportBikeMechanic extends Mechanic</p>
+               <p>{</p>
+               <p class="p-l">public function fixVehicle(Bike $bike)</p>
+               <p class="p-l">{</p>
+               <p class="p-l-1">return $bike;</p>
+               <p class="p-l">}</p>
+               <p>}</p>
+           </div>
+           <p>2.</p>
+           <p>Возвращаемые значения</p>
+          <div class="t-a-l">
+              <div class="abstractClass">
+                  <p>abstract class BikeFactory</p>
+                  <p>{</p>
+                  <p class="p-l">public function makeBike(): Bike</p>
+                  <p class="p-l">{</p>
+                  <p class="p-l-1">return new Bike;</p>
+                  <p class="p-l">}</p>
+                  <p class="pb-1">}</p>
+              </div>
+              <p>final class SportBikeFactory extends BikeFactory</p>
+              <p>{</p>
+              <p class="p-l">public function makeBike(): Bike</p>
+              <p class="p-l">{</p>
+              <p class="p-l-1">return new SportBike();</p>
+              <p class="p-l">}</p>
+              <p>}</p>
+              <p>class SportBikeFactory</p>
+              <p>{</p>
+              <p class="p-l">public function makeBike(): Bike</p>
+              <p class="p-l">{</p>
+              <p class="p-l-1">return new Vehicle();</p>
+              <p class="p-l">}</p>
+              <p>}</p>
+          </div>
+           <p>3.</p>
+           <p>Exception</p>
+           <p>Переопределенные методы в дочерних классах должны выдавать такие же или более специализированные
+               исключения</p>
+           <p>Как правило говорит
+               всегда возвращать исключения того же типа или более специализированные</p>
+           <hr>
+           <p>Принцип замены Лискова заключается в соблюдении контракта независимо от того, что мы используем: интерфейсы и
+               классы или иерархию наследования. Цель принципа - создавать замещаемые классы, поэтому мы
+               можем использовать любой из них, и все должно продолжать работать отлично.</p>
+       </div>
     </div>
     <div class="i solid__item">
         <h1>I</h1>
@@ -641,60 +806,16 @@
         <h1>D</h1>
         <p>Dependency Inversion</p>
         <p>полагаться на абстракции</p>
-
     </div>
 </div>
 
-<h1>84</h1>
-
+<h1>104</h1>
 <!--
-
-<h3>O -open-close</h3>
-<h4>Принцип открытости закрытости </h4>
-<h5>Классы должны быть открыты для расширения, но закрыты для модификации.</h5>
-<h4>Смысл принципа - Конструкция системы должна быть проста и устойчива к изменениям</h4>
-<h2>1</h2>
-<p>interface Workable</p>
-<p>{</p>
-<p>public function work():void</p>
-<p>}</p>
-<hr>
-<p>final class Programmer implements Workable</p>
-<p>{</p>
-<p>public function work(): void</p>
-<p>{</p>
-<p>echo 'coding an app';</p>
-<p>}</p>
-<hr>
-<h2>2</h2>
-<p>final class ProjectManager</p>
-<p>{</p>
-<p>public function manage(Workable $worker): void</p>
-<p>{</p>
-<p>$worker->work()</p>
-<p>}</p>
-<hr>
-<h2>3</h2>
-<p>final class Tester implements Workable</p>
-<p>{</p>
-<p>public function work(): void</p>
-<p>{</p>
-<p>echo 'testing an app';</p>
-<p>}</p>
-<p>}</p>
-<hr>
 <h3>Liskov Substitution</h3>
 <h5>Дочерние классы должны быть заменяемыми на свои родительские классы</h5>
 <h3>Принцип разделения интерфейса</h3>
-<p>Когда вы обнаруживаете, что создаете интерфейсы, которые не полностью реализованы в их клиентах, вы
-    нарушаете принцип разделения интерфейсов. Основная цель этого принципа - сделать интерфейсы. Разделение интерфейсов
-    и принцип единой ответственности дополняют друг друга. Они служат той же цели: обеспечивают небольшие,
-    очень сплоченные блоки. Принцип разделения интерфейса обеспечивает что интерфейсы небольшие,
-    а принцип единой ответственности гарантирует, что классы будут небольшими.</p>
-<hr>
+<p>Когда вы обнаруживаете, что создаете интерфейсы, которые не полностью реализованы в их клиентах, вынарушаете принцип разделения интерфейсов. Основная цель этого принципа - сделать интерфейсы. Разделение интерфейсови принцип единой ответственности дополняют друг друга. Они служат той же цели: обеспечивают небольшие,очень сплоченные блоки. Принцип разделения интерфейса обеспечивает что интерфейсы небольшие,а принцип единой ответственности гарантирует, что классы будут небольшими.</p>
 <h3>Dependency Inversion Principle</h3>
-<h5>Модули высокого уровня не должны зависеть от модулей низкого уровня</h5>
-<p>100</p>-->
-
+<h5>Модули высокого уровня не должны зависеть от модулей низкого уровня</h5>-->
 </body>
 </html>

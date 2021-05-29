@@ -72,3 +72,18 @@ h2 a{
 .t-a-l{
     text-align: left;
 }
+.solid{
+    width: 100%;
+}
+.s{
+    width: 425px;
+    min-width: 420px;
+}
+.o{
+    width: 420px;
+    min-width: 400px;
+}
+.l{
+    width: 420px;
+    min-width: 400px;
+}
