@@ -1,6 +1,72 @@
+
 body{
     background-color: #424141;
     color: #d4d3d3;
+    padding: 0;
+    margin: 0;
+}
+h1{
+    text-align: center;
+}
+.section{
+    padding: 1em;
+}
+.section--class{
+    border-radius: 30px;
+    padding: 1em;
+    font-weight: bold;
+}
+.section--class p{
+    margin: 0;
+    margin-bottom: .21em;
+}
+.abstractClass{
+    background-color: #3d2525;
+}
+.interface{
+    background-color: #5e5a5a;
+}
+.Class{
+    background-color: #06143d;
+}
+.trait{
+    background-color: #4f5f37;
+}
+.Class--error{
+    background-color: #a73131;
+}
+.green{
+    color: #11892e;
+}
+.yellow{
+    color: #c7aa45;
+}
+.section--class .p-l{
+    padding-left: 2em;
+}
+.section--class .pb-1{
+    margin-bottom: 1em;
+}
+.section--class .p-l-1{
+    padding-left: 4em;
+}
+@media (min-width: 720px) {
+    .parent{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .description{
+        margin-left: 3em;
+    }
+}
+.description{
+}
+/*
+body{
+    background-color: #424141;
+
 }
 h2 a{
     color: #000;
@@ -9,23 +75,19 @@ h2 a{
 .Class{
     font-size: 1.2em;
     min-width: 50%;
-    background-color: #1f409c;
-    border-radius: 30px;
+
+    padding: .6421em;
+}
+.description {
     padding: 1em;
+    font-size: 1em;
+    color: #9c883e;
 }
 .Class p{
     padding: 0;
     margin: 0;
 }
-.Class .p-l{
-    padding-left: 2em;
-}
-.Class .pb-1{
-    margin-bottom: 1em;
-}
-.Class .p-l-1{
-    padding-left: 4em;
-}
+
 .parent{
     display: flex;
 }
@@ -94,4 +156,4 @@ h2 a{
 .d{
     width: 380px;
     min-width: 380px;
-}
+}*/
